@@ -12,6 +12,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller

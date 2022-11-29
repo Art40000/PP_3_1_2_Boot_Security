@@ -10,7 +10,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Data
 @Table(name = "role")
 public class Role implements GrantedAuthority {
     @Id
@@ -18,9 +17,22 @@ public class Role implements GrantedAuthority {
     private long id;
     private String name;
 
+//    @ManyToMany(mappedBy = "roles")
+//    private Set<User> users = new HashSet<>();
+
     public Role() {
     }
     public Role(String name) {
+        this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
         this.name = name;
     }
 
