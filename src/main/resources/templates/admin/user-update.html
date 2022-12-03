@@ -13,11 +13,11 @@
 <div class="container">
     <form action="#" th:action="@{/admin/user-update}" th:object="${user}" method="post">
         <label for="id">ID</label>
-        <input readonly type="number" th:field="*{id}" id="id" class="form-control" placeholder="ID" required autofocus>
+        <input readonly type="number" th:field="*{id}" id="id" class="form-control" placeholder="ID">
      <label for="email">Email</label>
-        <input type="text" th:field="*{email}" id="email" class="form-control" placeholder="email" required autofocus>
+        <input readonly type="text" th:field="*{email}" id="email" class="form-control" placeholder="email">
       <label for="password">Password</label>
-        <input type="text" th:field="*{password}" id="password" class="form-control" placeholder="password" required autofocus>
+        <input type="password" th:field="*{password}" id="password" class="form-control" placeholder="password" required autofocus>
         <label for="name">Name</label>
         <input type="text" th:field="*{name}" id="name" class="form-control" placeholder="name" required autofocus>
      <label for="age">Age</label>

@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -33,9 +32,9 @@ public class UserServiceImpl implements UserService{
     @PostConstruct
     public void init(){
         //password - user
-        User user1 = new User("art@mail.com", "$2a$12$mKw06lhyBF3BMiRxIv0BAOzT5AFjnHc0TUofciUgtwj6ehLYbvSzm", "Art", 35);
+        User user1 = new User("art@mail.com", "$2a$12$R93X0z48TKzdxB0YBHYRfO9WuCibHC1hGV4IrW2RL7GoOjfap7K96", "Art", 35);
         //password - admin
-        User user2 = new User("em@mail.com", "$2a$12$FHoonI124ssoRQrAMpPuq.6rfI698NSJ60qDu99HKUPtZUM2Y57le", "Em", 45) ;
+        User user2 = new User("em@mail.com", "$2a$12$jeg0PNOyY9Rl5qIe1NtofeKLgQZn5F03JYl5//1YvvRSwlu5o2dUK", "Em", 45) ;
 
         Role roleUser = new Role("ROLE_USER");
         Role roleAdmin = new Role("ROLE_ADMIN");
@@ -52,31 +51,23 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    @Transactional
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
     @Override
-    @Transactional
-    public User findById(long id) {
+    public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
     @Override
-    @Transactional
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
          userRepository.deleteById(id);
     }
     @Override
-    @Transactional
     public List<User> findAll() {
-        return userRepository.findAll();
+        return  userRepository.findAll();
     }
-
     @Override
-    @Transactional
-    public User save(User user) {
-        return userRepository.save(user);
-    }
+    public User save(User user) { return userRepository.save(user); }
 
     @Override
     @Transactional
@@ -85,9 +76,6 @@ public class UserServiceImpl implements UserService{
         if (user == null) {
             throw new UsernameNotFoundException("User " + userName + "not found");
         }
-
-        return new org.springframework.security.core.userdetails.User (user.getEmail(), user.getPassword(),
-                user.getRoles());
-
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles());
     }
 }
