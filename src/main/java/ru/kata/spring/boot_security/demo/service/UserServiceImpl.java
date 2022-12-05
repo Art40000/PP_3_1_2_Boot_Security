@@ -1,9 +1,10 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.*;
@@ -19,6 +20,17 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
+    private PasswordEncoder PasswordEncoder;
+
+    @Override
+    public PasswordEncoder getPasswordEncoder() {
+        return PasswordEncoder;
+    }
+    @Override
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.PasswordEncoder = passwordEncoder;
+    }
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
@@ -32,6 +44,7 @@ public class UserServiceImpl implements UserService{
 
     @PostConstruct
     public void init(){
+
         //password - user
         User user1 = new User("art@mail.com", "$2a$12$R93X0z48TKzdxB0YBHYRfO9WuCibHC1hGV4IrW2RL7GoOjfap7K96", "Art", 35);
         //password - admin
@@ -46,8 +59,8 @@ public class UserServiceImpl implements UserService{
         user1.setRoles(Set.of(roleUser));
         user2.setRoles(Set.of(roleUser, roleAdmin));
 
-        this.save(user1);
-        this.save(user2);
+        userRepository.save(user1);
+        userRepository.save(user2);
     }
 
 
@@ -68,7 +81,15 @@ public class UserServiceImpl implements UserService{
         return  userRepository.findAll();
     }
     @Override
-    public User save(User user) { return userRepository.save(user); }
+    public User save(User user) {
+        user.setPassword(getPasswordEncoder().encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+//    @Override
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder(12);
+//    };
+
 
     @Override
     @Transactional

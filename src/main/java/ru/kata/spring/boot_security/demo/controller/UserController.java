@@ -21,9 +21,6 @@ import java.util.Set;
 public class UserController {
 
     private UserService userService;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -69,7 +66,6 @@ public class UserController {
         if(user.getRoles().size() == 0) {
             user.setRoles(Set.of(userService.getRoleRepository().findRoleByName("ROLE_USER")));
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         return "redirect:/admin";
     }
@@ -94,7 +90,6 @@ public class UserController {
         if(user.getRoles().size() == 0) {
             user.setRoles(Set.of(userService.getRoleRepository().findRoleByName("ROLE_USER")));
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         return "redirect:/admin";
     }
