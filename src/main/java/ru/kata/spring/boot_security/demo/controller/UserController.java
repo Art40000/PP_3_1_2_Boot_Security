@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -9,15 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.thymeleaf.util.StringUtils;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -32,11 +29,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/index")
-    public String index(Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    @GetMapping({"", "/", "/index"})
+    public String index( Model model, Principal principal){
         boolean isAuthenticated;
-        if(authentication == null) {
+        if(principal == null) {
             isAuthenticated = false;
         } else {
             isAuthenticated = true;
@@ -46,9 +42,9 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public String UserForm(@PathVariable("id") Long id, Model model, Principal principal) {
-        if(userService.findUserByEmail(principal.getName()).getRoles().contains("ROLE_USER")) {
-            id = userService.findUserByEmail(principal.getName()).getId();
+    public String UserForm(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal(expression = "username") String username) {
+        if(userService.findUserByEmail(username).getRoles().stream().allMatch(r -> r.getName().equals("ROLE_USER"))) {
+            id = userService.findUserByEmail(username).getId();
         }
         User user = userService.findById(id).get();
         model.addAttribute("user", user);
@@ -99,7 +95,6 @@ public class UserController {
             user.setRoles(Set.of(userService.getRoleRepository().findRoleByName("ROLE_USER")));
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // user.setId(userService.findUserByEmail(user.getEmail()).getId());
         userService.save(user);
         return "redirect:/admin";
     }

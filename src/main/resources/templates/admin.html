@@ -20,7 +20,6 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Password</th>
                 <th>Age</th>
                 <th>Roles</th>
             </tr>
@@ -30,7 +29,6 @@
                 <td th:text="${user.id}"></td>
                 <td th:text="${user.name}"></td>
                 <td th:text="${user.email}"></td>
-                <td th:text="${user.password}"></td>
                 <td th:text="${user.age}"></td>
                 <td>
                     <a th:each="role : ${user.roles}">

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService{
-     User findUserByEmail(String email);
+    User findUserByEmail(String email);
     List<User> findAll();
     Optional<User> findById(Long id);
     User save(User user);
     void deleteById(Long id);
-    public RoleRepository getRoleRepository();
+    RoleRepository getRoleRepository();
 }

@@ -13,10 +13,10 @@
 <h1>Welcome to Index PAGE!</h1>
 
 <div th:if="${isAuthenticated}">
-    <p><a th:href="@{/login}">Login</a></p>
+    <p><a th:href="@{/logout}">Logout</a></p>
 </div>
 <div th:unless="${isAuthenticated}">
-    <p><a th:href="@{/logout}">Logout</a></p>
+    <p><a th:href="@{/login}">Login</a></p>
 </div>
 
 
